@@ -1,0 +1,24 @@
+@import '../variables.scss';
+
+.root {
+  padding: 10px 20px;
+  margin: 20px 0 auto;
+  border: 1px solid $gray-light;
+  border-radius: 10px;
+  min-height: 100px;
+  width: 500px;
+}
+
+.container {
+
+}
+
+.word {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.definition {
+  font-size: 14px;
+  font-weight: 400;
+}
