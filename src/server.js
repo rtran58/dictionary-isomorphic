@@ -14,6 +14,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
@@ -74,6 +75,12 @@ server.use('/graphql', expressGraphQL(req => ({
   rootValue: { request: req },
   pretty: process.env.NODE_ENV !== 'production',
 })));
+
+//
+// Connect mongo database
+// -----------------------------------------------------------------------------
+mongoose.connect('mongodb://localhost/graphql');
+mongoose.Promise = require('bluebird');
 
 //
 // Register server-side rendering middleware

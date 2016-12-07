@@ -1,6 +1,6 @@
 import { GraphQLList as List } from 'graphql';
 import TermsItemType from '../types/TermsItemType';
-
+import TermModel from '../models/term';
 
 /**
  1. insalubrious - unfavorable or promoting to health
@@ -36,8 +36,8 @@ const items = [
 
 const terms = {
   type: new List(TermsItemType),
-  resolve() {
-    return items;
+  async resolve() {
+    return await TermModel.find();
   },
 };
 
