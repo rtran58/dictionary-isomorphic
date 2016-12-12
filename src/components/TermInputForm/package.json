@@ -1,0 +1,6 @@
+{
+  "name": "TermInputForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./TermInputForm.js"
+}
