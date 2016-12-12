@@ -35,7 +35,6 @@ const news = {
             items = data.responseData.feed.entries;
           }
 
-          console.log('items', items);
           return items;
         })
         .finally(() => {
