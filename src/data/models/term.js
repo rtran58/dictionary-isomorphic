@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import autoIncrement from 'mongoose-auto-increment';
 
 const termSchema = new mongoose.Schema({
   word: {
@@ -11,4 +12,6 @@ const termSchema = new mongoose.Schema({
   },
 });
 
+autoIncrement.initialize(mongoose.connection);
+termSchema.plugin(autoIncrement.plugin, 'Term');
 export default mongoose.model('Term', termSchema);

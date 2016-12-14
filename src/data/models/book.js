@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import autoIncrement from 'mongoose-auto-increment';
 
 const bookSchema = new mongoose.Schema({
   title: {
@@ -11,4 +12,6 @@ const bookSchema = new mongoose.Schema({
   }
 });
 
+autoIncrement.initialize(mongoose.connection);
+bookSchema.plugin(autoIncrement.plugin, 'Book');
 export default mongoose.model('Book', bookSchema);

@@ -15,6 +15,7 @@ import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import mongoose from 'mongoose';
+import mongooseAutoIncrement from 'mongoose-auto-increment';
 import jwt from 'jsonwebtoken';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
@@ -81,6 +82,8 @@ server.use('/graphql', expressGraphQL(req => ({
 // -----------------------------------------------------------------------------
 mongoose.connect('mongodb://localhost/graphql');
 mongoose.Promise = require('bluebird');
+
+mongooseAutoIncrement.initialize(mongoose.connection);
 
 //
 // Register server-side rendering middleware
