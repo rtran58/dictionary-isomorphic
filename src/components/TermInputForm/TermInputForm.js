@@ -5,10 +5,6 @@ import s from './TermInputForm.scss';
 class TermInputForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      word: '',
-      definition: ''
-    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleWordChange = this.handleWordChange.bind(this);
@@ -19,17 +15,18 @@ class TermInputForm extends Component {
     console.log('Term was added');
     event.preventDefault();
 
-    this.props.onSubmitTerm(this.state['word'], this.state['definition']);
+    this.props.onSubmitTerm();
   }
+
 
   handleWordChange(event) {
     event.preventDefault();
-    this.setState({word: event.target.value});
+    this.props.onWordChange(event.target.value);
   }
 
   handleDefinitionChange(event) {
     event.preventDefault();
-    this.setState({definition: event.target.value});
+    this.props.onDefinitionChange(event.target.value);
   }
 
   render() {
@@ -37,11 +34,11 @@ class TermInputForm extends Component {
       <form onSubmit={this.handleSubmit}>
         <label>
           Word:
-          <input type="text" value={this.state.word} onChange={this.handleWordChange} />
+          <input type="text" value={this.props.word} onChange={this.handleWordChange} />
         </label>
         <label>
           Definition:
-          <input type="textarea" value={this.state.definition} onChange={this.handleDefinitionChange} />
+          <input type="textarea" value={this.props.definition} onChange={this.handleDefinitionChange} />
         </label>
         <input type="submit" value="Submit" />
       </form>

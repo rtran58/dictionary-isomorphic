@@ -7,7 +7,7 @@ import {
 import TermType from '../../types/TermsItemType';
 import TermModel from '../../models/term';
 
-export default {
+const TermAdd = {
   type: TermType,
   description: 'Add new term',
   args: {
@@ -29,3 +29,5 @@ export default {
     return newTerm.toJSON();
   },
 };
+
+export default TermAdd;
