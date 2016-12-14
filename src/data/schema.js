@@ -16,8 +16,11 @@ import queryMe from './queries/me';
 import queryContent from './queries/content';
 import queryNews from './queries/news';
 import queryTerms from './queries/terms';
+import queryBooks from './queries/books';
 
 import mutationTermAdd from './mutations/term/add';
+import mutationCreateBook from './mutations/book/add'
+
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',
@@ -26,12 +29,14 @@ const schema = new Schema({
       content: queryContent,
       news: queryNews,
       terms: queryTerms,
+      books: queryBooks,
     },
   }),
   mutation: new ObjectType({
     name: 'Mutation',
     fields: {
       createTerm: mutationTermAdd,
+      createBook: mutationCreateBook,
     },
   }),
 });

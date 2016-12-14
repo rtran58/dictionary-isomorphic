@@ -1,5 +1,5 @@
 import React from 'react';
-import Terms from './Terms';
+import Terms from '../books/specific/Terms';
 
 export const path = '/terms';
 export const action = async (state) => {

@@ -15,13 +15,18 @@ import ContentPage from './components/ContentPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
 
+// import router from './core/router';
 const routes = [
   require('./routes/home'),
   require('./routes/contact'),
   require('./routes/login'),
   require('./routes/register'),
   require('./routes/terms'),
+  require('./routes/books/listing'),
+  require('./routes/books/specific'),
 ];
+
+debugger
 
 const router = new Router(on => {
   on('*', async (state, next) => {
