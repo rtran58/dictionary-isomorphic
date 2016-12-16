@@ -15,7 +15,7 @@ class Books extends Component {
   }
 
   async componentDidMount() {
-    const response = await fetch('/graphql?query={books{title}}');
+    const response = await fetch('/graphql?query={books{_id, title}}');
     const { data } = await response.json();
 
     this.setState({

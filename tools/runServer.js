@@ -40,7 +40,9 @@ function runServer(cb) {
     server.kill('SIGTERM');
   }
 
-  server = cp.spawn('node', ['--inspect', '--debug-brk', serverPath], {
+  const INSPECT = '--inspect';
+  const DEBUG_BRK = '--debug-brk';
+  server = cp.spawn('node', [INSPECT, DEBUG_BRK, serverPath], {
     env: Object.assign({ NODE_ENV: 'development' }, process.env),
     silent: false,
   });

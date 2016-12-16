@@ -1,6 +1,6 @@
 import {
   GraphQLNonNull as NonNull,
-  GraphQLString as StringObject,
+  GraphQLString as StringType,
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 
@@ -11,13 +11,17 @@ const TermAdd = {
   type: TermType,
   description: 'Add new term',
   args: {
+    bookId: {
+      name: 'bookId',
+      type: new NonNull(StringType),
+    },
     word: {
       name: 'word',
-      type: new NonNull(StringObject),
+      type: new NonNull(StringType),
     },
     definition: {
       name: 'definition',
-      type: new NonNull(StringObject),
+      type: new NonNull(StringType),
     },
   },
   async resolve(root, params) {

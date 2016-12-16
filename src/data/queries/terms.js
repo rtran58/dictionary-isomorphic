@@ -1,4 +1,8 @@
-import { GraphQLList as List } from 'graphql';
+import {
+  GraphQLList as List,
+  GraphQLNonNull as NonNull,
+  GraphQLString as StringType,
+} from 'graphql';
 import TermsItemType from '../types/TermsItemType';
 import TermModel from '../models/term';
 
@@ -36,8 +40,16 @@ const items = [
 
 const terms = {
   type: new List(TermsItemType),
-  async resolve() {
-    return await TermModel.find();
+  args: {
+    bookId: {
+      name: 'bookId',
+      type: new NonNull(StringType),
+    },
+  },
+  async resolve(root, params) {
+    return await TermModel.find({
+      bookId: params.bookId,
+    });
   },
 };
 

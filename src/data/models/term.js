@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
 
 const termSchema = new mongoose.Schema({
+  bookId: {
+    type: Number,
+    required: true,
+  },
   word: {
     type: String,
     required: true,

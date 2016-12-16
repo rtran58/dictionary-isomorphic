@@ -5,5 +5,5 @@ export const path = '/books/:id';
 export const action = (state, component) => {
   const title = 'Book' + state.params.id;
   state.context.onSetTitle(title);
-  return <Terms />
+  return <Terms bookId={state.params.id} />
 };
