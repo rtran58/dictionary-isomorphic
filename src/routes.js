@@ -26,8 +26,6 @@ const routes = [
   require('./routes/books/specific'),
 ];
 
-debugger
-
 const router = new Router(on => {
   on('*', async (state, next) => {
     const component = await next();

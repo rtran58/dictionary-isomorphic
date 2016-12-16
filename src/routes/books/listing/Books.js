@@ -27,7 +27,7 @@ class Books extends Component {
     return (
       <div className={s.root}>
         <div className={s.container}>
-          {this.state.books.map((book) => <BookCard book={book} /> )}
+          {this.state.books.map((book) => <BookCard key={book._id} book={book} /> )}
         </div>
       </div>
     )

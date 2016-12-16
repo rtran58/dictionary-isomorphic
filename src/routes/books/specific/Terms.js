@@ -27,7 +27,7 @@ class Terms extends Component {
   }
 
   async componentDidMount() {
-    const response = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){word, definition}}');
+    const response = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){_id, word, definition}}');
     const { data } = await response.json();
 
     this.setState({
@@ -80,7 +80,7 @@ class Terms extends Component {
     return (
       <div className={s.root}>
         <div className={s.container}>
-          {this.state.terms.map((term, i) => (<TermCard className={s.termCard} key={i} term={term}/>))}
+          {this.state.terms.map((term, i) => (<TermCard className={s.termCard} key={term._id} term={term}/>))}
           <TermInputForm onSubmitTerm={this.addTerm}
                          onWordChange={this.handleWordChange}
                          onDefinitionChange={this.handleDefinitionChange}
