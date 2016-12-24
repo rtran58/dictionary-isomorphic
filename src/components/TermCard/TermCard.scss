@@ -9,16 +9,20 @@
   width: 500px;
 }
 
-.container {
+.root:hover {
+  cursor: pointer;
+  background: #fca294;
+}
 
+.root:active {
+  background: #fc9383;
+}
+
+.container {
+  text-align: center;
+  font-size: 14px;
 }
 
 .word {
-  font-size: 12px;
   font-weight: 600;
-}
-
-.definition {
-  font-size: 14px;
-  font-weight: 400;
 }
