@@ -24,6 +24,7 @@ const routes = [
   require('./routes/terms'),
   require('./routes/books/listing'),
   require('./routes/books/specific'),
+  require('./routes/games/swipe'),
 ];
 
 const router = new Router(on => {

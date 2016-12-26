@@ -19,7 +19,9 @@ import queryTerms from './queries/terms';
 import queryBooks from './queries/books';
 
 import mutationTermAdd from './mutations/term/add';
-import mutationCreateBook from './mutations/book/add'
+import mutationCreateBook from './mutations/book/add';
+
+import swipeScore from './queries/scores/swipe';
 
 const schema = new Schema({
   query: new ObjectType({
@@ -30,6 +32,7 @@ const schema = new Schema({
       news: queryNews,
       terms: queryTerms,
       books: queryBooks,
+      swipeScore: swipeScore
     },
   }),
   mutation: new ObjectType({
