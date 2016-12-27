@@ -176,7 +176,7 @@ const serverConfig = extend(true, {}, config, {
     __filename: false,
     __dirname: false,
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   plugins: [
     ...config.plugins,
     new webpack.DefinePlugin({ ...GLOBALS, 'process.env.BROWSER': false }),
