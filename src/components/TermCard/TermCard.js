@@ -15,7 +15,6 @@ class TermCard extends Component {
   }
 
   toggleDefinition() {
-    debugger
     this.setState({ showDefinition: !this.state.showDefinition });
   }
 
