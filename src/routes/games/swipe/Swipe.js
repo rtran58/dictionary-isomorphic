@@ -50,6 +50,7 @@ class Swipe extends Component {
     super(props);
 
     this.state = {
+      terms: [],
       deck: [],
       score: {},
       currTermIndex: 0,
@@ -92,7 +93,7 @@ class Swipe extends Component {
     const updatedFrequency = this.state.score[currTerm._id].frequency + 1;
     let nextState = update(this.state, {
       deck: {
-        $push: [this.state.deck[this.state.currTermIndex]]
+        $push: [currTerm]
       },
       score: {
         [currTerm._id]: {
@@ -113,9 +114,49 @@ class Swipe extends Component {
     this.setState(nextState);
   }
 
+  // game logic for getting a term right
+  // remove term card from deck and decrement
+  // frequency of that term on the score card.
+  // then select a new term from deck
   handleCorrect(e) {
     e.preventDefault();
-    debugger;
+
+    let prevState = this.state;
+    const currTerm = this.state.deck[this.state.currTermIndex];
+    const updatedFrequency = this.state.score[currTerm._id].frequency - 1;
+    let nextState = update(this.state, {
+      deck: {
+        $splice: [[this.state.currTermIndex, 1]]
+      },
+      score: {
+        [currTerm._id]: {
+          frequency: {
+            $set: updatedFrequency
+          },
+        },
+      },
+    });
+
+    if (updatedFrequency === 0) {
+      const termIndex = this.state.terms.findIndex((term) => {
+        return term._id === currTerm._id;
+      });
+
+      nextState = update(nextState, {
+        terms: {
+          $splice: [[termIndex, 1]]
+        },
+      });
+    }
+
+    const nextTermIndex = this.roll(nextState.deck.length);
+    nextState = update(nextState, {
+      currTermIndex: {
+        $set: nextTermIndex
+      },
+    });
+
+    this.setState(nextState);
   }
 
   // fetch collection of terms and scores
@@ -139,6 +180,7 @@ class Swipe extends Component {
     const deck = constructDeckOfTerms(terms, dictionary);
     const currTermIndex = this.roll(deck.length);
     this.setState({
+      terms: terms,
       deck: deck,
       score: dictionary,
       currTermIndex: currTermIndex,
@@ -146,6 +188,8 @@ class Swipe extends Component {
   }
 
   render() {
+    console.log(this.state);
+    if (!this.state.terms.length) return <div>No more terms left</div>;
     if (!this.state.deck.length) return <div>loading...</div>;
 
     return(
