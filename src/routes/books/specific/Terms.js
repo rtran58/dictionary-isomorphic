@@ -27,7 +27,7 @@ class Terms extends Component {
   }
 
   async componentDidMount() {
-    const response = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){_id, word, definition}}');
+    const response = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){id, word, definition}}');
     const { data } = await response.json();
 
     this.setState({
@@ -46,7 +46,7 @@ class Terms extends Component {
     const query = `mutation{createTerm(word: "${word}", 
                                        definition: "${definition}",
                                        bookId: "${bookId}"
-                                      ){word, definition, bookId}}`;
+                                      ){word, definition}}`;
     fetch('/graphql', {
       method: 'post',
       headers: API_HEADERS,

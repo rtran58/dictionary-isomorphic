@@ -31,7 +31,8 @@ const schema = new Schema({
       content: queryContent,
       news: queryNews,
       terms: queryTerms,
-      books: queryBooks,
+      bookList: queryBooks.bookList,
+      book: queryBooks.book,
       swipeScore: swipeScore
     },
   }),

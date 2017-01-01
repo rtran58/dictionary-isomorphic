@@ -10,7 +10,7 @@ import ScoreType from './SwipeScoreType';
 const SwipeType = new ObjectType({
   name: 'Swipe',
   fields: {
-    _id: { type: new NonNull(StringType) },
+    id: { type: new NonNull(StringType) },
     bookId: { type: new NonNull(StringType) },
     lastUpdated: { type: new NonNull(StringType) },
     scores: { type: new List(ScoreType) },

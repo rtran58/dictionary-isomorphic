@@ -3,7 +3,7 @@ import autoIncrement from 'mongoose-auto-increment';
 
 const swipeScoreSchema = mongoose.Schema({
   termId: {
-    type: Number,
+    type: String,
     required: true,
   },
   score: {

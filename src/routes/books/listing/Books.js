@@ -15,11 +15,11 @@ class Books extends Component {
   }
 
   async componentDidMount() {
-    const response = await fetch('/graphql?query={books{_id, title}}');
+    const response = await fetch('/graphql?query={bookList{_id, title}}');
     const { data } = await response.json();
 
     this.setState({
-      books: data.books
+      books: data.bookList
     });
   }
 

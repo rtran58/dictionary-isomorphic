@@ -2,7 +2,7 @@ import {
   GraphQLObjectType as ObjectType,
   GraphQLNonNull as NonNull,
   GraphQLString as StringType,
-  GraphQLInt as IntType,
+  GraphQLID as IDType,
   GraphQLList as List,
 } from 'graphql';
 
@@ -12,14 +12,17 @@ const BookType = new ObjectType({
   name: 'BookType',
   fields: {
     _id: {
-      type: IntType,
+      type: new NonNull(IDType),
+    },
+    lastUpdated: {
+      type: new NonNull(StringType,)
     },
     title: {
       type: new NonNull(StringType),
     },
     terms: {
       type: new List(TermType)
-    }
+    },
   },
 });
 

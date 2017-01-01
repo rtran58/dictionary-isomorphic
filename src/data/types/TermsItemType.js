@@ -1,6 +1,6 @@
 import {
   GraphQLObjectType as ObjectType,
-  GraphQLInt as IntType,
+  GraphQLID as IDType,
   GraphQLString as StringType,
   GraphQLNonNull as NonNull,
 } from 'graphql';
@@ -8,8 +8,7 @@ import {
 const TermsItemType = new ObjectType({
   name: 'TermsItem',
   fields: {
-    _id: { type: IntType },
-    bookId: { type: new NonNull(IntType) },
+    id: { type: new NonNull(StringType) },
     word: { type: new NonNull(StringType) },
     definition: { type: new NonNull(StringType) },
   },

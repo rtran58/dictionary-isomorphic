@@ -3,6 +3,7 @@ import {
   GraphQLNonNull as NonNull,
 } from 'graphql';
 
+import BookModel from '../../models/book';
 import TermModel from '../../models/term';
 import SwipeModel from '../../models/games/swipe/swipe';
 import SwipeScoreModel from '../../models/games/swipe/score';
@@ -13,7 +14,7 @@ function batchUpdate(swipe, terms) {
   const map = {};
   let i;
 
-  if (swipe.length > 0) {
+  if (swipe) {
     const scores = swipe.scores;
     for(i=0; i<scores.length; i++) {
       map[scores[i].termId] = scores[i];
@@ -22,10 +23,10 @@ function batchUpdate(swipe, terms) {
   }
 
   for(i=0; i<terms.length; i++) {
-    if (map[terms[i]._id]) {
-      map[terms[i]._id].count++;
+    if (map[terms[i].id]) {
+      map[terms[i].id].count++;
     } else {
-      map[terms[i]._id] = { count: 1 };
+      map[terms[i].id] = { count: 1 };
     }
   }
 
@@ -71,15 +72,19 @@ const swipe = {
   },
   async resolve(root, params) {
     const bookId = params.bookId;
-    const swipe = await SwipeModel.find({
-      bookId: parseInt(params.bookId)
+    const swipe = await SwipeModel.findOne({
+      bookId: bookId
     });
+
+    const book = await BookModel.findById(bookId);
 
     const terms = await TermModel.find({
-      bookId: parseInt(params.bookId)
+      _id: {
+        $in: book.terms
+      }
     });
 
-    if (!swipe.length || terms.lastUpdated > swipe.lastUpdated) {
+    if (!swipe || swipe.lastUpdated < book.lastUpdated) {
       const scores = batchUpdate(swipe, terms);
       const swipeModel = new SwipeModel({
         bookId: params.bookId,
@@ -88,7 +93,7 @@ const swipe = {
 
       return await swipeModel.save();
     } else {
-      return swipe[0];
+      return swipe;
     }
   },
 };

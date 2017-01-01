@@ -4,7 +4,9 @@ import {
   GraphQLString as StringType,
 } from 'graphql';
 import TermsItemType from '../types/TermsItemType';
+
 import TermModel from '../models/term';
+import BookModel from '../models/book';
 
 /**
  1. insalubrious - unfavorable or promoting to health
@@ -46,9 +48,13 @@ const terms = {
       type: new NonNull(StringType),
     },
   },
-  async resolve(root, params) {
+  async resolve(root, {bookId}) {
+    const book = await BookModel.findById(bookId);
+    const termObjectIDs = book.terms;
     return await TermModel.find({
-      bookId: params.bookId,
+      _id: {
+        $in: termObjectIDs
+      }
     });
   },
 };

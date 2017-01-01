@@ -1,17 +1,23 @@
 import mongoose from 'mongoose';
-import autoIncrement from 'mongoose-auto-increment';
+
+import TermModel from './term';
 
 const bookSchema = new mongoose.Schema({
+  id: {
+    type: String
+  },
   title: {
     type: String,
     required: true
   },
+  lastUpdated: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
   terms: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Term'
   }
 });
 
-autoIncrement.initialize(mongoose.connection);
-bookSchema.plugin(autoIncrement.plugin, 'Book');
 export default mongoose.model('Book', bookSchema);

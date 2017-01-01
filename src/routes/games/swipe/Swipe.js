@@ -23,7 +23,7 @@ function merge(termsMap, scoresMap) {
   const dictionary = {};
   _.each(scoresMap, function(val, key) {
     dictionary[key] = {};
-    dictionary[key].termId = termsMap[key]._id;
+    dictionary[key].termId = termsMap[key].id;
     dictionary[key].word = termsMap[key].word;
     dictionary[key].definition = termsMap[key].definition;
     dictionary[key].score = parseInt(scoresMap[key].score);
@@ -36,7 +36,7 @@ function constructDeckOfTerms(terms, dictionary) {
   const arr = [];
   let frequency;
   _.each(terms, (term) => {
-    frequency = dictionary[term._id].frequency;
+    frequency = dictionary[term.id].frequency;
     while (frequency) {
       arr.push(term);
       frequency--;
@@ -73,10 +73,11 @@ class Swipe extends Component {
       return 0;
     }
 
-    let nextIndex = this.roll(nextState.deck.length);
-    while (nextState.deck[nextIndex]._id === currTerm._id) {
+    let nextIndex;
+    while (_.isUndefined(nextIndex)|| nextState.deck[nextIndex].id === currTerm.id) {
       nextIndex = this.roll(nextState.deck.length);
     }
+
     return nextIndex;
   }
 
@@ -90,13 +91,13 @@ class Swipe extends Component {
     let prevState = this.state;
 
     const currTerm = this.state.deck[this.state.currTermIndex];
-    const updatedFrequency = this.state.score[currTerm._id].frequency + 1;
+    const updatedFrequency = this.state.score[currTerm.id].frequency + 1;
     let nextState = update(this.state, {
       deck: {
         $push: [currTerm]
       },
       score: {
-        [currTerm._id]: {
+        [currTerm.id]: {
           frequency: {
             $set: updatedFrequency
           }
@@ -123,13 +124,13 @@ class Swipe extends Component {
 
     let prevState = this.state;
     const currTerm = this.state.deck[this.state.currTermIndex];
-    const updatedFrequency = this.state.score[currTerm._id].frequency - 1;
+    const updatedFrequency = this.state.score[currTerm.id].frequency - 1;
     let nextState = update(this.state, {
       deck: {
         $splice: [[this.state.currTermIndex, 1]]
       },
       score: {
-        [currTerm._id]: {
+        [currTerm.id]: {
           frequency: {
             $set: updatedFrequency
           },
@@ -139,7 +140,7 @@ class Swipe extends Component {
 
     if (updatedFrequency === 0) {
       const termIndex = this.state.terms.findIndex((term) => {
-        return term._id === currTerm._id;
+        return term.id === currTerm.id;
       });
 
       nextState = update(nextState, {
@@ -149,7 +150,7 @@ class Swipe extends Component {
       });
     }
 
-    const nextTermIndex = this.roll(nextState.deck.length);
+    const nextTermIndex = this.getNextTermIndex(currTerm, nextState);
     nextState = update(nextState, {
       currTermIndex: {
         $set: nextTermIndex
@@ -164,16 +165,16 @@ class Swipe extends Component {
   // a specific term may show up numerous times in the deck
   // based on its frequency on the score card.
   async componentDidMount() {
-    const termsResponse = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){_id, word, definition}}');
+    const termsResponse = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){id, word, definition}}');
     const termsResponseJSON = await termsResponse.json();
     const terms = termsResponseJSON.data.terms;
 
-    const swipeResponse = await fetch('/graphql?query={swipeScore(bookId:\"'+this.props.bookId+'\"){_id, bookId, lastUpdated, scores{termId,score,frequency}}}');
+    const swipeResponse = await fetch('/graphql?query={swipeScore(bookId:\"'+this.props.bookId+'\"){id, bookId, lastUpdated, scores{termId,score,frequency}}}');
     const swipeResponseJSON = await swipeResponse.json();
     const swipe = swipeResponseJSON.data.swipeScore;
     const scores = swipe.scores;
 
-    const termsMap= mapById(terms, '_id');
+    const termsMap= mapById(terms, 'id');
     const scoresMap = mapById(scores, 'termId');
 
     const dictionary = merge(termsMap, scoresMap);

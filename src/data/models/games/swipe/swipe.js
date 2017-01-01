@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
-import autoIncrement from 'mongoose-auto-increment';
 
 import ScoreSchema from './score'
 
 const swipeSchema = mongoose.Schema({
   bookId: {
-    type: Number,
+    type: String,
     required: true,
   },
   lastUpdated: {
@@ -16,6 +15,4 @@ const swipeSchema = mongoose.Schema({
   scores: [ScoreSchema.schema],
 });
 
-autoIncrement.initialize(mongoose.connection);
-swipeSchema.plugin(autoIncrement.plugin, 'Swipe');
 export default mongoose.model('Swipe', swipeSchema);
