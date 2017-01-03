@@ -4,6 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Swipe.scss';
 import _ from 'underscore';
 
+import SwipeHistory from '../../../components/SwipeHistory';
 import TermCard from '../../../components/TermCard';
 
 function mapById(arr, idPropertyName) {
@@ -54,6 +55,7 @@ class Swipe extends Component {
       deck: [],
       score: {},
       currTermIndex: 0,
+      history: []
     };
 
     this.handleWrong = this.handleWrong.bind(this);
@@ -79,6 +81,19 @@ class Swipe extends Component {
     }
 
     return nextIndex;
+  }
+
+  pushHistory(nextState, term, isCorrect) {
+    let prevState = this.state;
+
+    return update(nextState, {
+      history: {
+        $push: [{
+          word: term.word,
+          correct: isCorrect
+        }]
+      }
+    });
   }
 
   // game logic for getting a term wrong
@@ -111,6 +126,8 @@ class Swipe extends Component {
         $set: nextTermIndex
       },
     });
+
+    nextState = this.pushHistory(nextState, currTerm, false);
 
     this.setState(nextState);
   }
@@ -157,6 +174,8 @@ class Swipe extends Component {
       },
     });
 
+    nextState = this.pushHistory(nextState, currTerm, true);
+
     this.setState(nextState);
   }
 
@@ -195,12 +214,17 @@ class Swipe extends Component {
 
     return(
       <div>
-        <TermCard term={this.state.deck[this.state.currTermIndex]} />
-        <a href="#" onClick={this.handleWrong}>Wrong</a>
-        <a href="#" onClick={this.handleCorrect}>Correct</a>
+        <div>
+          <TermCard term={this.state.deck[this.state.currTermIndex]} />
+          <a href="#" onClick={this.handleWrong}>Wrong</a>
+          <a href="#" onClick={this.handleCorrect}>Correct</a>
+        </div>
+        <div>
+          <SwipeHistory className="swipe-history" entries={this.state.history} />
+        </div>
       </div>
     );
   }
 }
 
-export default Swipe;
+export default withStyles(Swipe, s);

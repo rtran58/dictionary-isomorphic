@@ -1,0 +1,6 @@
+{
+  "name": "SwipeHistory",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./SwipeHistory.js"
+}
