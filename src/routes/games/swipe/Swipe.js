@@ -51,6 +51,7 @@ class Swipe extends Component {
     super(props);
 
     this.state = {
+      showingDefinition: false,
       terms: [],
       deck: [],
       score: {},
@@ -58,8 +59,29 @@ class Swipe extends Component {
       history: []
     };
 
+    this.toggleVisibility = this.toggleVisibility.bind(this);
     this.handleWrong = this.handleWrong.bind(this);
     this.handleCorrect = this.handleCorrect.bind(this);
+  }
+
+  toggleVisibility() {
+    let prevState = this.state;
+
+    let nextState = update(this.state, {
+      showingDefinition: {
+        $set: !this.state.showingDefinition,
+      }
+    });
+
+    this.setState(nextState);
+  }
+
+  resetCardVisibility(nextState) {
+    return update(nextState, {
+      showingDefinition: {
+        $set: false,
+      },
+    });
   }
 
   // generate random index between 0 and max
@@ -84,8 +106,6 @@ class Swipe extends Component {
   }
 
   pushHistory(nextState, term, isCorrect) {
-    let prevState = this.state;
-
     return update(nextState, {
       history: {
         $push: [{
@@ -128,6 +148,7 @@ class Swipe extends Component {
     });
 
     nextState = this.pushHistory(nextState, currTerm, false);
+    nextState = this.resetCardVisibility(nextState);
 
     this.setState(nextState);
   }
@@ -175,6 +196,7 @@ class Swipe extends Component {
     });
 
     nextState = this.pushHistory(nextState, currTerm, true);
+    nextState = this.resetCardVisibility(nextState);
 
     this.setState(nextState);
   }
@@ -215,7 +237,10 @@ class Swipe extends Component {
     return(
       <div>
         <div>
-          <TermCard term={this.state.deck[this.state.currTermIndex]} />
+          <TermCard showingDefinition={this.state.showingDefinition}
+                    term={this.state.deck[this.state.currTermIndex]}
+                    onToggle={this.toggleVisibility}
+          />
           <a href="#" onClick={this.handleWrong}>Wrong</a>
           <a href="#" onClick={this.handleCorrect}>Correct</a>
         </div>

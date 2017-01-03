@@ -7,27 +7,23 @@ class TermCard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      showDefinition: false,
-    };
-
-    this.toggleDefinition = this.toggleDefinition.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
-  toggleDefinition() {
-    this.setState({ showDefinition: !this.state.showDefinition });
+  handleToggle() {
+    this.props.onToggle();
   }
 
   render() {
     const word = <span className={s.word}>{this.props.term.word}</span>;
     const definition = <span className={s.definition}>{this.props.term.definition}</span>
-    const cardBody = this.state.showDefinition
+    const cardBody = this.props.showingDefinition
       ? <div>{word} - {definition}</div>
       : <div>{word}</div>;
 
     return (
       <div className={cx(s.root, this.props.className)}
-           onClick={this.toggleDefinition} >
+           onClick={this.handleToggle} >
         <div className={s.container} >
           {cardBody}
         </div>
@@ -42,6 +38,7 @@ TermCard.propTypes = {
     word: PropTypes.string.isRequired,
     definition: PropTypes.string.isRequired,
   }),
+  onToggle: PropTypes.func,
 };
 
 export default withStyles(TermCard, s);
