@@ -5,7 +5,7 @@ import cx from 'classnames';
 
 const BookCard = ({ className, book }) => (
   <div className={cx(s.container, className)}>
-    <a href={"games/swipe/"+book._id}>
+    <a href={"books/"+book._id}>
       {book.title}
     </a>
   </div>

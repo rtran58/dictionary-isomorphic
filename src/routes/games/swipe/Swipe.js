@@ -110,6 +110,7 @@ class Swipe extends Component {
       history: {
         $push: [{
           word: term.word,
+          definition: term.definition,
           correct: isCorrect
         }]
       }

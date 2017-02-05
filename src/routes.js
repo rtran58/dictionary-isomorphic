@@ -17,7 +17,7 @@ import ErrorPage from './components/ErrorPage';
 
 // import router from './core/router';
 const routes = [
-  require('./routes/home'),
+  //require('./routes/home'),
   require('./routes/contact'),
   require('./routes/login'),
   require('./routes/register'),

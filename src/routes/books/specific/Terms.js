@@ -4,7 +4,7 @@ import update from 'react-addons-update';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Terms.scss';
 
-import TermCard from '../../../components/TermCard';
+import TermList from '../../../components/TermList';
 import TermInputForm from '../../../components/TermInputForm';
 
 const API_HEADERS = {
@@ -27,11 +27,19 @@ class Terms extends Component {
   }
 
   async componentDidMount() {
-    const response = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){id, word, definition}}');
-    const { data } = await response.json();
+    const bookResponse = await fetch('/graphql?query={book(id:\"'+this.props.bookId+'\"){lastUpdated, title}}');
+    const bookResponseJSON = await bookResponse.json();
+    const book = bookResponseJSON.data.book;
+
+    this.bookTitle = book.title;
+    this.bookLastUpdated = book.lastUpdated;
+
+    const termsResponse = await fetch('/graphql?query={terms(bookId:\"'+this.props.bookId+'\"){id, word, definition}}');
+    const termsResponseJSON = await termsResponse.json();
+    const terms = termsResponseJSON.data.terms;
 
     this.setState({
-      terms: data.terms,
+      terms,
     });
   }
 
@@ -77,10 +85,14 @@ class Terms extends Component {
   }
 
   render() {
+    debugger
     return (
       <div className={s.root}>
         <div className={s.container}>
-          {this.state.terms.map((term, i) => (<TermCard className={s.termCard} key={term._id} term={term}/>))}
+          <div className={s.title}>
+            {this.bookTitle}
+          </div>
+          <TermList terms={this.state.terms} />
           <TermInputForm onSubmitTerm={this.addTerm}
                          onWordChange={this.handleWordChange}
                          onDefinitionChange={this.handleDefinitionChange}
