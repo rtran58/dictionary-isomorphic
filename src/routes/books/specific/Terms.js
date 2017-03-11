@@ -7,9 +7,6 @@ import s from './Terms.scss';
 import TermList from '../../../components/TermList';
 import TermInputForm from '../../../components/TermInputForm';
 
-const API_HEADERS = {
-  'Content-Type': 'application/json',
-};
 
 class Terms extends Component {
   constructor(props) {
@@ -23,7 +20,7 @@ class Terms extends Component {
 
     this.addTerm = this.addTerm.bind(this);
     this.handleWordChange = this.handleWordChange.bind(this);
-    this.handleDefinitionChange = this.handleDefinitionChange.bind(this);
+    //this.handleDefinitionChange = this.handleDefinitionChange.bind(this);
   }
 
   async componentDidMount() {
@@ -46,26 +43,36 @@ class Terms extends Component {
   addTerm() {
     const bookId = this.props.bookId;
     const word = this.state.word;
-    const definition = this.state.definition;
+    let definition = "";
 
     let prevState = this.state;
-    let newTerm = {word, definition, bookId};
-    let nextState = update(this.state.terms, {$push: [newTerm]});
+    let newTerm;
+    let nextState;
     const query = `mutation{createTerm(word: "${word}", 
-                                       definition: "${definition}",
                                        bookId: "${bookId}"
                                       ){word, definition}}`;
+
+    this.setState({
+      word: '',
+      definition: '',
+    });
+
     fetch('/graphql', {
       method: 'post',
-      headers: API_HEADERS,
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({query: query}),
     }).then((response) => {
       if (response.ok) {
-        return response.json()
+        return response.json();
       } else {
         throw new Error("Server response wasn't ok");
       }
     }).then((responseData) => {
+      definition = responseData.data.createTerm.definition;
+      newTerm = {word, definition, bookId};
+      nextState = update(this.state.terms, {$push: [newTerm]});
       this.setState({
         terms: nextState,
         word: '',
@@ -80,12 +87,7 @@ class Terms extends Component {
     this.setState({word: value});
   }
 
-  handleDefinitionChange(value) {
-    this.setState({definition: value});
-  }
-
   render() {
-    debugger
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -95,9 +97,9 @@ class Terms extends Component {
           <TermList terms={this.state.terms} />
           <TermInputForm onSubmitTerm={this.addTerm}
                          onWordChange={this.handleWordChange}
-                         onDefinitionChange={this.handleDefinitionChange}
-                         word={this.state.word}
-                         definition={this.state.definition} />
+                         //onDefinitionChange={this.handleDefinitionChange}
+                         word={this.state.word} />
+                         /* definition={this.state.definition} /> */
         </div>
       </div>
     );
