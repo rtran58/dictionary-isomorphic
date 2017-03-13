@@ -9,7 +9,13 @@ import TermInputForm from '../../../components/TermInputForm';
 
 function wrapWords(words) {
   return words.map((word) => '\"' + word +'\"');
-};
+}
+
+function parseWords(words) {
+  return words.map((word) => {
+    return word.replace(/[^a-zA-Z]/g, '');
+  });
+}
 
 class Terms extends Component {
   constructor(props) {
@@ -44,8 +50,11 @@ class Terms extends Component {
   addTerm() {
     const bookId = this.props.bookId;
     const input = this.state.input;
-    const words = wrapWords(input.split('\n')).join();
-    let definition = "";
+
+    let words = input.split('\n');
+    words = parseWords(words);
+    words = wrapWords(words).join();
+    let definition;
 
     let prevState = this.state;
     let newTerms;
