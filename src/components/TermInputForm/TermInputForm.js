@@ -12,7 +12,6 @@ class TermInputForm extends Component {
   }
 
   handleSubmit(event) {
-    console.log('Term was added');
     event.preventDefault();
 
     this.props.onSubmitTerm();
@@ -31,16 +30,12 @@ class TermInputForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
+      <form className={s.root} onSubmit={this.handleSubmit}>
+        <label className={s.label}>
           Word:
-          <input type="text" value={this.props.word} onChange={this.handleWordChange} />
+          <textarea className={s.textarea}rows="6" cols="50" value={this.props.input} onChange={this.handleWordChange} />
         </label>
-        <label>
-          Definition:
-          <input type="textarea" value={this.props.definition} onChange={this.handleDefinitionChange} />
-        </label>
-        <input type="submit" value="Submit" />
+        <input className={s.input} type="submit" value="Submit" />
       </form>
     )
   }

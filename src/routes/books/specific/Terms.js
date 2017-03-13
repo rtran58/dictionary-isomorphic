@@ -7,20 +7,21 @@ import s from './Terms.scss';
 import TermList from '../../../components/TermList';
 import TermInputForm from '../../../components/TermInputForm';
 
+function wrapWords(words) {
+  return words.map((word) => '\"' + word +'\"');
+};
 
 class Terms extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      word: '',
-      definition: '',
+      input: '',
       terms: [],
     };
 
     this.addTerm = this.addTerm.bind(this);
     this.handleWordChange = this.handleWordChange.bind(this);
-    //this.handleDefinitionChange = this.handleDefinitionChange.bind(this);
   }
 
   async componentDidMount() {
@@ -42,19 +43,19 @@ class Terms extends Component {
 
   addTerm() {
     const bookId = this.props.bookId;
-    const word = this.state.word;
+    const input = this.state.input;
+    const words = wrapWords(input.split('\n')).join();
     let definition = "";
 
     let prevState = this.state;
-    let newTerm;
+    let newTerms;
     let nextState;
-    const query = `mutation{createTerm(word: "${word}", 
+    const query = `mutation{createTerm(words: [${words}], 
                                        bookId: "${bookId}"
                                       ){word, definition}}`;
 
     this.setState({
-      word: '',
-      definition: '',
+      input: '',
     });
 
     fetch('/graphql', {
@@ -70,13 +71,17 @@ class Terms extends Component {
         throw new Error("Server response wasn't ok");
       }
     }).then((responseData) => {
-      definition = responseData.data.createTerm.definition;
-      newTerm = {word, definition, bookId};
-      nextState = update(this.state.terms, {$push: [newTerm]});
+      newTerms = responseData.data.createTerm.map((term) => {
+        return {
+          word: term.word,
+          definition: term.definition,
+          bookId: bookId
+        };
+      });
+      nextState = update(this.state.terms, {$push: newTerms});
       this.setState({
         terms: nextState,
-        word: '',
-        definition: '',
+        input: ''
       });
     }).catch((error) => {
       this.setState({terms: prevState});
@@ -84,7 +89,7 @@ class Terms extends Component {
   }
 
   handleWordChange(value) {
-    this.setState({word: value});
+    this.setState({input: value});
   }
 
   render() {
@@ -97,9 +102,7 @@ class Terms extends Component {
           <TermList terms={this.state.terms} />
           <TermInputForm onSubmitTerm={this.addTerm}
                          onWordChange={this.handleWordChange}
-                         //onDefinitionChange={this.handleDefinitionChange}
-                         word={this.state.word} />
-                         /* definition={this.state.definition} /> */
+                         input={this.state.input} />
         </div>
       </div>
     );

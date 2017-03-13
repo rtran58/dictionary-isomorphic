@@ -16,7 +16,12 @@ const BookAdd = {
     }
   },
   async resolve(root, params) {
-    const bookModel = new BookModel(params);
+    const title = params.title;
+    const lastUpdated = Date.now();
+    const bookModel = new BookModel({
+      title,
+      lastUpdated,
+    });
     const newBook = await bookModel.save();
     if (!newBook) {
       throw new Error('Error saving new book');
